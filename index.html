@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Taptap 9D Online</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: linear-gradient(to right, #2c3e50, #3498db);
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+
+    #click-img {
+      width: 200px;
+      height: 200px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: transform 0.1s;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+    }
+
+    #click-img:active {
+      transform: scale(0.95);
+    }
+
+    #score {
+      font-size: 2em;
+      margin: 20px 0;
+    }
+
+    .shop, .inventory {
+      margin-top: 30px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+    }
+
+    .skin {
+      margin: 10px;
+      display: inline-block;
+      padding: 10px;
+      background: #34495e;
+      border-radius: 10px;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 5px 10px;
+      border: none;
+      background: #1abc9c;
+      color: white;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      background: gray;
+      cursor: not-allowed;
+    }
+
+    img.skin-preview {
+      width: 50px;
+      height: 50px;
+      border-radius: 10px;
+      display: block;
+      margin: 0 auto 5px;
+    }
+
+    .effect {
+      position: absolute;
+      pointer-events: none;
+      z-index: 1000;
+      animation: fadeOut 1s forwards;
+    }
+
+    @keyframes fadeOut {
+      0% { opacity: 1; }
+      100% { opacity: 0; transform: scale(2); }
+    }
+
+    .dev {
+      margin-top: 30px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+    }
+  </style>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getFirestore, collection, setDoc, doc, getDoc, query, orderBy, limit, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAADSTvAsT27160HmAHa3zs9N-Vtdh1VNY",
+      authDomain: "taptap9d.firebaseapp.com",
+      projectId: "taptap9d",
+      storageBucket: "taptap9d.firebasestorage.app",
+      messagingSenderId: "233755582996",
+      appId: "1:233755582996:web:916db8e4cc843f945afd01",
+      measurementId: "G-X5TLP0WVZB"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const leaderboardList = document.getElementById('leaderboard-list');
+
+    const leaderboardQuery = query(
+      collection(db, "leaderboard"),
+      orderBy("score", "desc"),
+      limit(10)
+    );
+
+    onSnapshot(leaderboardQuery, (snapshot) => {
+      leaderboardList.innerHTML = '';
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const li = document.createElement('li');
+        li.textContent = `${data.name}: ${data.score}`;
+        leaderboardList.appendChild(li);
+      });
+    });
+
+    window.sendScore = async () => {
+      const today = new Date().toISOString().split('T')[0];
+      if (localStorage.getItem('lastSubmitDate') === today) {
+        alert('Kamu sudah mengirim skor hari ini. Coba lagi besok!');
+        return;
+      }
+
+      const name = prompt("Masukkan nama kamu:");
+      if (!name) return;
+
+      const userRef = doc(db, "leaderboard", name);
+      const userSnap = await getDoc(userRef);
+
+      if (userSnap.exists()) {
+        const oldScore = userSnap.data().score;
+        if (score > oldScore) {
+          await setDoc(userRef, { name, score, updatedAt: serverTimestamp() });
+          alert("Skor kamu diperbarui di leaderboard!");
+        } else {
+          alert("Skormu lebih kecil dari sebelumnya!");
+        }
+      } else {
+        await setDoc(userRef, { name, score, updatedAt: serverTimestamp() });
+        alert("Skor berhasil dikirim ke leaderboard!");
+      }
+
+      localStorage.setItem('lastSubmitDate', today);
+    };
+  </script>
+</head>
+<body>
+  <h1>Taptap 9D Online</h1>
+  <img id="click-img" src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" alt="click" />
+  <div id="score">Score: 0</div>
+  <button onclick="sendScore()">Kirim Skor ke Leaderboard</button>
+  
+  <div class="shop">
+    <h2>Toko Skin</h2>
+    <div class="skin" data-cost="500" data-skin="aldi" data-sound="n.mp3">
+      <img class="skin-preview" src="aldiinpomabar.jpg" alt="aldi">
+      Aldi Info Mabar (500 skor)<br>
+      <button>Beli</button>
+    </div>
+    <div class="skin" data-cost="1000" data-skin="fibri" data-sound="sounds/pop.mp3">
+      <img class="skin-preview" src="perjalananfibri.jpg" alt="fibri">
+      Perjalanan Fibri (1000 skor)<br>
+      <button>Beli</button>
+    </div>
+    <div class="skin" data-cost="1500" data-skin="afdan" data-sound="sounds/egg.mp3" data-effect="egg">
+      <img class="skin-preview" src="afdanhintalu.jpg" alt="afdan">
+      Afdan Mode Hintalu (1500 skor)<br>
+      <button>Beli</button>
+    </div>
+    <div class="skin" data-cost="2000" data-skin="noval" data-sound="nopalpetir.mp3" data-effect="thunder">
+      <img class="skin-preview" src="novalzeusmts.jpg" alt="noval">
+      Noval Zeus MTS (2000 skor)<br>
+      <button>Beli</button>
+    </div>
+    <div class="skin" data-cost="3000" data-skin="iyan" data-sound="motor.mp3" data-effect="fire">
+      <img class="skin-preview" src="iyanracing.jpg" alt="iyan">
+      Iyan Racing (3000 skor)<br>
+      <button>Beli</button>
+    </div>
+    <div class="skin" data-cost="1000" data-skin="ridho" data-sound="ngorok.mp3">
+      <img class="skin-preview" src="ridhoguring.jpg" alt="ridho">
+      Ridho Guring (1000 skor)<br>
+      <button>Beli</button>
+      
+    </div>
+    <h3>beberapa skin punya efek dan suara yang berbeda saat di klik!</h3>
+  </div>
+
+  <div class="inventory">
+    <h2>Inventory Skin</h2>
+    <div id="inventory-list">Belum ada skin.</div>
+  </div>
+
+   <div class="leaderboard">
+     <h2>Leaderboard</h2>
+     <ol id="leaderboard-list">Loading...</ol>
+   </div>
+
+   <div class="dev" >
+    <div><h4>Dev : Rizky,GPT</h4></div>
+   </div>
+
+  <script>
+    let score = parseInt(localStorage.getItem('score')) || 0;
+    const scoreEl = document.getElementById('score');
+    const clickImg = document.getElementById('click-img');
+    const inventoryList = document.getElementById('inventory-list');
+
+    const defaultSkin = {
+      name: 'default',
+      img: 'https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif',
+      sound: 'popsound.mp3',
+      effect: ''
+    };
+
+    const effectImages = {
+      egg: '🥚',
+      thunder: '⚡',
+      fire: '🔥'
+    };
+
+    let ownedSkins = JSON.parse(localStorage.getItem('ownedSkins')) || [defaultSkin];
+    let currentSkin = localStorage.getItem('currentSkin') || 'default';
+
+    function saveGame() {
+      localStorage.setItem('score', score);
+      localStorage.setItem('ownedSkins', JSON.stringify(ownedSkins));
+      localStorage.setItem('currentSkin', currentSkin);
+    }
+
+    function playEffect(name) {
+      if (!effectImages[name]) return;
+      const span = document.createElement('span');
+      span.className = 'effect';
+      span.style.left = Math.random() * window.innerWidth + 'px';
+      span.style.top = Math.random() * window.innerHeight + 'px';
+      span.style.fontSize = '40px';
+      span.textContent = effectImages[name];
+      document.body.appendChild(span);
+      setTimeout(() => span.remove(), 1000);
+    }
+
+    clickImg.addEventListener('click', () => {
+      score++;
+      scoreEl.textContent = 'Score: ' + score;
+
+      const skin = ownedSkins.find(s => s.name === currentSkin);
+      if (skin) {
+        if (skin.sound) {
+          const sfx = new Audio(skin.sound);
+          sfx.play();
+        }
+        if (skin.effect) {
+          playEffect(skin.effect);
+        }
+      } else {
+        const sfx = new Audio('popsound.mp3');
+        sfx.play();
+      }
+
+      saveGame();
+    });
+
+    document.querySelectorAll('.skin').forEach(skinDiv => {
+      const btn = skinDiv.querySelector('button');
+      btn.addEventListener('click', () => {
+        const cost = parseInt(skinDiv.dataset.cost);
+        const skinName = skinDiv.dataset.skin;
+        const skinImg = skinDiv.querySelector('img').src;
+        const sound = skinDiv.dataset.sound;
+        const effect = skinDiv.dataset.effect;
+
+        if (score >= cost) {
+          if (ownedSkins.find(s => s.name === skinName)) {
+            alert('Skin ini sudah kamu miliki.');
+            return;
+          }
+          score -= cost;
+          scoreEl.textContent = 'Score: ' + score;
+          ownedSkins.push({ name: skinName, img: skinImg, sound, effect });
+          updateInventory();
+          alert('Berhasil membeli skin: ' + skinName);
+          saveGame();
+        } else {
+          alert('Skor tidak cukup!');
+        }
+      });
+    });
+
+    function updateInventory() {
+      inventoryList.innerHTML = '';
+      ownedSkins.forEach(skin => {
+        const btn = document.createElement('button');
+        btn.innerHTML = `<img src="${skin.img}" width="30"> Pilih ${skin.name}`;
+        btn.onclick = () => {
+          clickImg.src = skin.img;
+          currentSkin = skin.name;
+          saveGame();
+        };
+        inventoryList.appendChild(btn);
+      });
+      if (ownedSkins.length === 0) {
+        inventoryList.textContent = 'Belum ada skin.';
+      }
+    }
+
+    // Inisialisasi awal
+    scoreEl.textContent = 'Score: ' + score;
+    const selectedSkin = ownedSkins.find(s => s.name === currentSkin) || defaultSkin;
+    clickImg.src = selectedSkin.img;
+    updateInventory();
+  </script>
+</body>
+</html>
