@@ -210,7 +210,7 @@
 <div class="skin">
 <img alt="tama" class="skin-preview" src="tama patapim.jpg"/>
       Tama Patapim (Achievement)<br/>
-<small>Dapatkan 3000 skor dengan skin Aldi Info Mabar</small>
+<small>Dapatkan 3500 skor dengan skin Aldi Info Mabar</small>
 </div>
 <div class="skin">
 <img alt="atmin" class="skin-preview" src="atminpuisi.jpg"/>
@@ -259,7 +259,7 @@ function toggleSound() {
     egg: '🥚',
     thunder: '⚡',
     fire: '🔥',
-    '🌳': '🌳',
+    'tama patapim.jpg': 'tama patapim.jpg',
     '😭': '😭'
   };
 
@@ -369,9 +369,17 @@ if (!sound && ['aldi','fibri','afdan'].includes(skinDiv.dataset.skin)) {
       btn.innerHTML = `<img src="${skin.img}" width="30"> Pilih ${skin.name}`;
       
 btn.onclick = () => {
+  // Simpan skor skin lama
+  const allScores = JSON.parse(localStorage.getItem('skinScores') || '{}');
+  allScores[currentSkin] = scoreWithCurrentSkin;
+
   clickImg.src = skin.img;
   currentSkin = skin.name;
-  scoreWithCurrentSkin = 0;
+
+  // Ambil skor skin baru
+  scoreWithCurrentSkin = allScores[currentSkin] || 0;
+  localStorage.setItem('skinScores', JSON.stringify(allScores));
+
 
   // Fallback if sound is missing
   if (!skin.sound) {
@@ -393,11 +401,11 @@ btn.onclick = () => {
     const achievementSkins = [
       {
         requiredSkin: "aldi",
-        requiredScore: 3000,
+        requiredScore: 3500,
         name: "tama",
         img: "tama patapim.jpg",
         sound: "tamzbrainrot.mp3",
-        effect: "🌳"
+        effect: "tama patapim.jpg"
       },
       {
         requiredSkin: "noval",
