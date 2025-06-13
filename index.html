@@ -103,17 +103,7 @@
       background: rgba(255, 255, 255, 0.1);
       border-radius: 10px;
     }
-  
-
-.effect-img {
-  position: absolute;
-  pointer-events: none;
-  z-index: 1000;
-  width: 80px;
-  height: auto;
-  animation: fadeOut 1s forwards;
-}
-</style>
+  </style>
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
     import { getFirestore, collection, setDoc, doc, getDoc, query, orderBy, limit, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
@@ -182,7 +172,7 @@
 <h1>Taptap 9D Online</h1>
 <img alt="click" id="click-img" src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif"/>
 <div id="score">Score: 0</div>
-<button onclick="sendScore()">Kirim Skor ke Leaderboard</button>
+<button onclick="sendScore()">Kirim Skor ke Leaderboard🏆</button>
 <button id="mute-button">Matikan Suara🔊</button>
 <div class="shop" id="shop-skins">
 <h2>Toko Skin</h2>
@@ -220,7 +210,7 @@
 <div class="skin">
 <img alt="tama" class="skin-preview" src="tama patapim.jpg"/>
       Tama Patapim (Achievement)<br/>
-<small>Dapatkan 5000 skor dengan skin Aldi Info Mabar</small>
+<small>Dapatkan 3000 skor dengan skin Aldi Info Mabar</small>
 </div>
 <div class="skin">
 <img alt="atmin" class="skin-preview" src="atminpuisi.jpg"/>
@@ -285,16 +275,6 @@ scoreWithCurrentSkin = parseInt(localStorage.getItem('scoreWithCurrentSkin')) ||
   }
 
   function playEffect(name) {
-  if (name === "🌳" || name === "tama") {
-    const img = document.createElement('img');
-    img.src = "tama patapim.jpg"; // pastikan file ini ada
-    img.className = 'effect-img';
-    img.style.left = Math.random() * window.innerWidth + 'px';
-    img.style.top = Math.random() * window.innerHeight + 'px';
-    document.body.appendChild(img);
-    setTimeout(() => img.remove(), 1000);
-    return;
-  }
     if (!effectImages[name]) return;
     const span = document.createElement('span');
     span.className = 'effect';
@@ -352,7 +332,10 @@ if (currentSkin) scoreWithCurrentSkin += scoreToAdd;
       const cost = parseInt(skinDiv.dataset.cost);
       const skinName = skinDiv.dataset.skin;
       const skinImg = skinDiv.querySelector('img').src;
-      let sound = skinDiv.getAttribute('data-sound') || 'popsound.mp3';
+      let sound = skinDiv.getAttribute('data-sound');
+if (!sound && ['aldi','fibri','afdan'].includes(skinDiv.dataset.skin)) {
+  sound = 'popsound.mp3';
+}
       const effect = skinDiv.dataset.effect;
 
       if (score >= cost) {
@@ -390,8 +373,7 @@ btn.onclick = () => {
   currentSkin = skin.name;
   scoreWithCurrentSkin = 0;
 
-  // Fallback if sound or effect is missing
-  if (!skin.effect && skin.name === "tama") skin.effect = "🌳";
+  // Fallback if sound is missing
   if (!skin.sound) {
     skin.sound = 'popsound.mp3';
   }
@@ -411,7 +393,7 @@ btn.onclick = () => {
     const achievementSkins = [
       {
         requiredSkin: "aldi",
-        requiredScore: 5000,
+        requiredScore: 3000,
         name: "tama",
         img: "tama patapim.jpg",
         sound: "tamzbrainrot.mp3",
@@ -435,10 +417,7 @@ function checkAchievements() {
         ) {
           
 
-
-if (ach.name === "tama" && !ach.effect) ach.effect = "🌳";
 ownedSkins.push({ ...ach });
-
 alert("Kamu mendapatkan skin achievement: " + ach.name);
 currentSkin = ach.name;
 clickImg.src = ach.img;
