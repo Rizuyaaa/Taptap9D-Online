@@ -1,10 +1,11 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Taptap 9D Online</title>
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Taptap 9D Online</title>
+<style>
     * {
       box-sizing: border-box;
       font-family: 'Arial', sans-serif;
@@ -103,7 +104,7 @@
       border-radius: 10px;
     }
   </style>
-  <script type="module">
+<script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
     import { getFirestore, collection, setDoc, doc, getDoc, query, orderBy, limit, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
 
@@ -168,170 +169,283 @@
   </script>
 </head>
 <body>
-  <h1>Taptap 9D Online</h1>
-  <img id="click-img" src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif" alt="click" />
-  <div id="score">Score: 0</div>
-  <button onclick="sendScore()">Kirim Skor ke Leaderboard</button>
+<h1>Taptap 9D Online</h1>
+<img alt="click" id="click-img" src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif"/>
+<div id="score">Score: 0</div>
+<button onclick="sendScore()">Kirim Skor ke Leaderboard</button>
+<button id="mute-button">Matikan Suara🔊</button>
+<div class="shop" id="shop-skins">
+<h2>Toko Skin</h2>
+<div class="skin" data-cost="500" data-skin="aldi" data-sound="popsound.mp3">
+<img alt="aldi" class="skin-preview" src="aldiinpomabar.jpg"/>
+      Aldi Info Mabar (500 skor)<br/>
+<button>Beli</button>
+</div>
+<div class="skin" data-cost="1000" data-skin="fibri" data-sound="popsound.mp3">
+<img alt="fibri" class="skin-preview" src="perjalananfibri.jpg"/>
+      Perjalanan Fibri (1000 skor)<br/>
+<button>Beli</button>
+</div>
+<div class="skin" data-cost="1500" data-effect="egg" data-skin="afdan" data-sound="popsound.mp3">
+<img alt="afdan" class="skin-preview" src="afdanhintalu.jpg"/>
+      Afdan Mode Hintalu (1500 skor)<br/>
+<button>Beli</button>
+</div>
+<div class="skin" data-cost="2000" data-effect="thunder" data-skin="noval" data-sound="popsound.mp3">
+<img alt="noval" class="skin-preview" src="novalzeusmts.jpg"/>
+      Noval Zeus MTS (2000 skor)<br/>
+<button>Beli</button>
+</div>
+<div class="skin" data-cost="3000" data-effect="fire" data-skin="iyan" data-sound="motor.mp3">
+<img alt="iyan" class="skin-preview" src="iyanracing.jpg"/>
+      Iyan Racing (3000 skor)<br/>
+<button>Beli</button>
+</div>
+<div class="skin" data-cost="1000" data-skin="ridho" data-sound="ngorok.mp3">
+<img alt="ridho" class="skin-preview" src="ridhoguring.jpg"/>
+      Ridho Guring (1000 skor)<br/>
+<button>Beli</button>
+</div>
+<p>Beberapa skin punya efek dan suara saat diklik!</p><p style="margin-top:10px;font-size:1em;">💥 Skin Noval, Iyan, Tama, dan Atmin memberi +5 skor per klik!</p></div><div class="shop"><h2>Skin Achievement</h2>
+<div class="skin">
+<img alt="tama" class="skin-preview" src="tama patapim.jpg"/>
+      Tama Patapim (Achievement)<br/>
+<small>Dapatkan 5000 skor dengan skin Aldi Info Mabar</small>
+</div>
+<div class="skin">
+<img alt="atmin" class="skin-preview" src="atminpuisi.jpg"/>
+      Atmin Puisi (Achievement)<br/>
+<small>Dapatkan 10000 skor dengan skin Noval Zeus MTS</small>
+</div>
+</div>
+<div class="inventory">
+<h2>Inventory Skin</h2>
+<div id="inventory-list">Belum ada skin.</div>
+</div>
+<div class="leaderboard">
+<h2>Leaderboard</h2>
+<ol id="leaderboard-list">Loading...</ol>
+</div>
+<div class="dev">
+<div><h4>Dev : Rizky,GPT</h4></div>
+</div>
+<script>
+  let score = parseInt(localStorage.getItem('score')) || 0;
+    let scoreWithCurrentSkin;
+let clickSound = new Audio();
+  const scoreEl = document.getElementById('score');
+  const clickImg = document.getElementById('click-img');
+  const inventoryList = document.getElementById('inventory-list');
   
-  <div class="shop">
-    <h2>Toko Skin</h2>
-    <div class="skin" data-cost="500" data-skin="aldi" data-sound="n.mp3">
-      <img class="skin-preview" src="aldiinpomabar.jpg" alt="aldi">
-      Aldi Info Mabar (500 skor)<br>
-      <button>Beli</button>
-    </div>
-    <div class="skin" data-cost="1000" data-skin="fibri" data-sound="sounds/pop.mp3">
-      <img class="skin-preview" src="perjalananfibri.jpg" alt="fibri">
-      Perjalanan Fibri (1000 skor)<br>
-      <button>Beli</button>
-    </div>
-    <div class="skin" data-cost="1500" data-skin="afdan" data-sound="sounds/egg.mp3" data-effect="egg">
-      <img class="skin-preview" src="afdanhintalu.jpg" alt="afdan">
-      Afdan Mode Hintalu (1500 skor)<br>
-      <button>Beli</button>
-    </div>
-    <div class="skin" data-cost="2000" data-skin="noval" data-sound="nopalpetir.mp3" data-effect="thunder">
-      <img class="skin-preview" src="novalzeusmts.jpg" alt="noval">
-      Noval Zeus MTS (2000 skor)<br>
-      <button>Beli</button>
-    </div>
-    <div class="skin" data-cost="3000" data-skin="iyan" data-sound="motor.mp3" data-effect="fire">
-      <img class="skin-preview" src="iyanracing.jpg" alt="iyan">
-      Iyan Racing (3000 skor)<br>
-      <button>Beli</button>
-    </div>
-    <div class="skin" data-cost="1000" data-skin="ridho" data-sound="ngorok.mp3">
-      <img class="skin-preview" src="ridhoguring.jpg" alt="ridho">
-      Ridho Guring (1000 skor)<br>
-      <button>Beli</button>
-      
-    </div>
-    <h3>beberapa skin punya efek dan suara yang berbeda saat di klik!</h3>
-  </div>
+  let isMuted = localStorage.getItem('muted') === '1';
 
-  <div class="inventory">
-    <h2>Inventory Skin</h2>
-    <div id="inventory-list">Belum ada skin.</div>
-  </div>
+  const soundBtn = document.getElementById('mute-button');
+soundBtn.textContent = isMuted ? 'Aktifkan Suara' : 'Matikan Suara';
+soundBtn.onclick = toggleSound;
+function toggleSound() {
+    isMuted = !isMuted;
+    localStorage.setItem('muted', isMuted ? '1' : '0');
+    soundBtn.textContent = isMuted ? 'Aktifkan Suara' : 'Matikan Suara';
+  }
 
-   <div class="leaderboard">
-     <h2>Leaderboard</h2>
-     <ol id="leaderboard-list">Loading...</ol>
-   </div>
+  const defaultSkin = {
+    name: 'default',
+    img: 'https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif',
+    sound: 'popsound.mp3',
+    effect: ''
+  };
 
-   <div class="dev" >
-    <div><h4>Dev : Rizky,GPT</h4></div>
-   </div>
+  const effectImages = {
+    egg: '🥚',
+    thunder: '⚡',
+    fire: '🔥'
+  };
 
-  <script>
-    let score = parseInt(localStorage.getItem('score')) || 0;
-    const scoreEl = document.getElementById('score');
-    const clickImg = document.getElementById('click-img');
-    const inventoryList = document.getElementById('inventory-list');
+  let ownedSkins = JSON.parse(localStorage.getItem('ownedSkins')) || [defaultSkin];
+  let currentSkin = localStorage.getItem('currentSkin') || 'default';
+scoreWithCurrentSkin = parseInt(localStorage.getItem('scoreWithCurrentSkin')) || 0;
 
-    const defaultSkin = {
-      name: 'default',
-      img: 'https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif',
-      sound: 'popsound.mp3',
-      effect: ''
-    };
+  function saveGame() {
+      localStorage.setItem('scoreWithCurrentSkin', scoreWithCurrentSkin);
+    localStorage.setItem('score', score);
+    localStorage.setItem('ownedSkins', JSON.stringify(ownedSkins));
+    localStorage.setItem('currentSkin', currentSkin);
+  }
 
-    const effectImages = {
-      egg: '🥚',
-      thunder: '⚡',
-      fire: '🔥'
-    };
+  function playEffect(name) {
+    if (!effectImages[name]) return;
+    const span = document.createElement('span');
+    span.className = 'effect';
+    span.style.left = Math.random() * window.innerWidth + 'px';
+    span.style.top = Math.random() * window.innerHeight + 'px';
+    span.style.fontSize = '40px';
+    span.textContent = effectImages[name];
+    document.body.appendChild(span);
+    setTimeout(() => span.remove(), 1000);
+  }
 
-    let ownedSkins = JSON.parse(localStorage.getItem('ownedSkins')) || [defaultSkin];
-    let currentSkin = localStorage.getItem('currentSkin') || 'default';
-
-    function saveGame() {
-      localStorage.setItem('score', score);
-      localStorage.setItem('ownedSkins', JSON.stringify(ownedSkins));
-      localStorage.setItem('currentSkin', currentSkin);
-    }
-
-    function playEffect(name) {
-      if (!effectImages[name]) return;
-      const span = document.createElement('span');
-      span.className = 'effect';
-      span.style.left = Math.random() * window.innerWidth + 'px';
-      span.style.top = Math.random() * window.innerHeight + 'px';
-      span.style.fontSize = '40px';
-      span.textContent = effectImages[name];
-      document.body.appendChild(span);
-      setTimeout(() => span.remove(), 1000);
-    }
-
-    clickImg.addEventListener('click', () => {
-      score++;
-      scoreEl.textContent = 'Score: ' + score;
-
-      const skin = ownedSkins.find(s => s.name === currentSkin);
-      if (skin) {
-        if (skin.sound) {
-          const sfx = new Audio(skin.sound);
-          sfx.play();
-        }
-        if (skin.effect) {
-          playEffect(skin.effect);
-        }
-      } else {
-        const sfx = new Audio('popsound.mp3');
-        sfx.play();
-      }
-
-      saveGame();
-    });
-
-    document.querySelectorAll('.skin').forEach(skinDiv => {
-      const btn = skinDiv.querySelector('button');
-      btn.addEventListener('click', () => {
-        const cost = parseInt(skinDiv.dataset.cost);
-        const skinName = skinDiv.dataset.skin;
-        const skinImg = skinDiv.querySelector('img').src;
-        const sound = skinDiv.dataset.sound;
-        const effect = skinDiv.dataset.effect;
-
-        if (score >= cost) {
-          if (ownedSkins.find(s => s.name === skinName)) {
-            alert('Skin ini sudah kamu miliki.');
-            return;
-          }
-          score -= cost;
-          scoreEl.textContent = 'Score: ' + score;
-          ownedSkins.push({ name: skinName, img: skinImg, sound, effect });
-          updateInventory();
-          alert('Berhasil membeli skin: ' + skinName);
-          saveGame();
-        } else {
-          alert('Skor tidak cukup!');
-        }
-      });
-    });
-
-    function updateInventory() {
-      inventoryList.innerHTML = '';
-      ownedSkins.forEach(skin => {
-        const btn = document.createElement('button');
-        btn.innerHTML = `<img src="${skin.img}" width="30"> Pilih ${skin.name}`;
-        btn.onclick = () => {
-          clickImg.src = skin.img;
-          currentSkin = skin.name;
-          saveGame();
-        };
-        inventoryList.appendChild(btn);
-      });
-      if (ownedSkins.length === 0) {
-        inventoryList.textContent = 'Belum ada skin.';
-      }
-    }
-
-    // Inisialisasi awal
+  clickImg.addEventListener('click', () => {
+    let scoreToAdd = 1;
+const buffedSkins = ["iyan", "noval", "tama", "atmin"];
+if (buffedSkins.includes(currentSkin)) {
+  scoreToAdd = 5;
+}
+score += scoreToAdd;
+if (currentSkin) scoreWithCurrentSkin += scoreToAdd;
+      checkAchievements();
     scoreEl.textContent = 'Score: ' + score;
-    const selectedSkin = ownedSkins.find(s => s.name === currentSkin) || defaultSkin;
-    clickImg.src = selectedSkin.img;
-    updateInventory();
-  </script>
+  updateSkinScoreDisplay();
+
+    const skin = ownedSkins.find(s => s.name === currentSkin);
+    if (skin) {
+      if (!isMuted && skin.sound) {
+        try {
+        clickSound.src = skin.sound;
+        clickSound.play().catch(e => console.warn("Audio play error:", e));
+      } catch (e) {
+        console.warn("Audio load error:", e);
+      }
+      }
+      if (skin.effect) {
+        playEffect(skin.effect);
+      }
+    } else {
+      if (!isMuted) {
+        try {
+  clickSound.src = "popsound.mp3";
+  clickSound.play().catch(e => console.warn("Fallback audio error:", e));
+} catch (e) {
+  console.warn("Fallback audio load failed:", e);
+}
+      }
+    }
+
+    updateSkinScoreDisplay();
+    saveGame();
+  });
+
+  document.querySelectorAll('#shop-skins .skin').forEach(skinDiv => {
+    const btn = skinDiv.querySelector('button');
+    btn.addEventListener('click', () => {
+      const cost = parseInt(skinDiv.dataset.cost);
+      const skinName = skinDiv.dataset.skin;
+      const skinImg = skinDiv.querySelector('img').src;
+      const sound = skinDiv.getAttribute('data-sound') || 'popsound.mp3';
+      const effect = skinDiv.dataset.effect;
+
+      if (score >= cost) {
+        if (ownedSkins.find(s => s.name === skinName)) {
+          alert('Skin ini sudah kamu miliki.');
+          return;
+        }
+        score -= cost;
+        scoreEl.textContent = 'Score: ' + score;
+  updateSkinScoreDisplay();
+        ownedSkins.push({
+  name: skinName,
+  img: skinImg,
+  sound: sound || 'popsound.mp3',
+  effect
+});
+        updateInventory();
+        alert('Berhasil membeli skin: ' + skinName);
+        updateSkinScoreDisplay();
+    saveGame();
+      } else {
+        alert('Skor tidak cukup!');
+      }
+    });
+  });
+
+  function updateInventory() {
+    inventoryList.innerHTML = '';
+    ownedSkins.forEach(skin => {
+      const btn = document.createElement('button');
+      btn.innerHTML = `<img src="${skin.img}" width="30"> Pilih ${skin.name}`;
+      
+btn.onclick = () => {
+  clickImg.src = skin.img;
+  currentSkin = skin.name;
+  scoreWithCurrentSkin = 0;
+
+  // Fallback if sound is missing
+  if (!skin.sound) {
+    skin.sound = 'popsound.mp3';
+  }
+
+  updateSkinScoreDisplay();
+  saveGame();
+};
+
+      inventoryList.appendChild(btn);
+    });
+    if (ownedSkins.length === 0) {
+      inventoryList.textContent = 'Belum ada skin.';
+    }
+  }
+
+  
+    const achievementSkins = [
+      {
+        requiredSkin: "aldi",
+        requiredScore: 5000,
+        name: "tama",
+        img: "tama patapim.jpg",
+        sound: "tamzbrainrot.mp3",
+        effect: "🌳"
+      },
+      {
+        requiredSkin: "noval",
+        requiredScore: 10000,
+        name: "atmin",
+        img: "atminpuisi.jpg",
+        sound: "siatminpuisi.mp3",
+        effect: "😭"
+      }
+    ];
+function checkAchievements() {
+      achievementSkins.forEach(ach => {
+        if (
+          currentSkin === ach.requiredSkin &&
+          scoreWithCurrentSkin >= ach.requiredScore &&
+          !ownedSkins.find(s => s.name === ach.name)
+        ) {
+          
+ownedSkins.push({
+  name: ach.name,
+  img: ach.img,
+  sound: ach.sound,
+  effect: ach.effect
+});
+alert("Kamu mendapatkan skin achievement: " + ach.name);
+currentSkin = ach.name;
+clickImg.src = ach.img;
+scoreWithCurrentSkin = 0;
+updateInventory();
+updateSkinScoreDisplay();
+saveGame();
+
+        }
+      });
+    }
+
+
+  const skinScoreEl = document.createElement('div');
+  skinScoreEl.id = "skin-score";
+  skinScoreEl.style.marginBottom = "10px";
+  skinScoreEl.style.fontSize = "1.2em";
+  document.getElementById('score').after(skinScoreEl);
+
+  function updateSkinScoreDisplay() {
+    skinScoreEl.textContent = "Score dengan skin ini: " + scoreWithCurrentSkin;
+  }
+
+// Inisialisasi awal
+  scoreEl.textContent = 'Score: ' + score;
+  updateSkinScoreDisplay();
+  const selectedSkin = ownedSkins.find(s => s.name === currentSkin) || defaultSkin;
+  clickImg.src = selectedSkin.img;
+  updateInventory();
+</script>
 </body>
 </html>
