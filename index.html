@@ -103,7 +103,17 @@
       background: rgba(255, 255, 255, 0.1);
       border-radius: 10px;
     }
-  </style>
+  
+
+.effect-img {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1000;
+  width: 80px;
+  height: auto;
+  animation: fadeOut 1s forwards;
+}
+</style>
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
     import { getFirestore, collection, setDoc, doc, getDoc, query, orderBy, limit, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
@@ -240,12 +250,12 @@ let clickSound = new Audio();
   let isMuted = localStorage.getItem('muted') === '1';
 
   const soundBtn = document.getElementById('mute-button');
-soundBtn.textContent = isMuted ? 'Aktifkan Suara' : 'Matikan Suara';
+soundBtn.textContent = isMuted ? 'Aktifkan Suara🔊' : 'Matikan Suara🔈';
 soundBtn.onclick = toggleSound;
 function toggleSound() {
     isMuted = !isMuted;
     localStorage.setItem('muted', isMuted ? '1' : '0');
-    soundBtn.textContent = isMuted ? 'Aktifkan Suara' : 'Matikan Suara';
+    soundBtn.textContent = isMuted ? 'Aktifkan Suara🔊' : 'Matikan Suara🔈';
   }
 
   const defaultSkin = {
@@ -258,7 +268,9 @@ function toggleSound() {
   const effectImages = {
     egg: '🥚',
     thunder: '⚡',
-    fire: '🔥'
+    fire: '🔥',
+    '🌳': '🌳',
+    '😭': '😭'
   };
 
   let ownedSkins = JSON.parse(localStorage.getItem('ownedSkins')) || [defaultSkin];
@@ -273,6 +285,16 @@ scoreWithCurrentSkin = parseInt(localStorage.getItem('scoreWithCurrentSkin')) ||
   }
 
   function playEffect(name) {
+  if (name === "🌳" || name === "tama") {
+    const img = document.createElement('img');
+    img.src = "tama patapim.jpg"; // pastikan file ini ada
+    img.className = 'effect-img';
+    img.style.left = Math.random() * window.innerWidth + 'px';
+    img.style.top = Math.random() * window.innerHeight + 'px';
+    document.body.appendChild(img);
+    setTimeout(() => img.remove(), 1000);
+    return;
+  }
     if (!effectImages[name]) return;
     const span = document.createElement('span');
     span.className = 'effect';
@@ -330,7 +352,7 @@ if (currentSkin) scoreWithCurrentSkin += scoreToAdd;
       const cost = parseInt(skinDiv.dataset.cost);
       const skinName = skinDiv.dataset.skin;
       const skinImg = skinDiv.querySelector('img').src;
-      const sound = skinDiv.getAttribute('data-sound') || 'popsound.mp3';
+      let sound = skinDiv.getAttribute('data-sound') || 'popsound.mp3';
       const effect = skinDiv.dataset.effect;
 
       if (score >= cost) {
@@ -368,7 +390,8 @@ btn.onclick = () => {
   currentSkin = skin.name;
   scoreWithCurrentSkin = 0;
 
-  // Fallback if sound is missing
+  // Fallback if sound or effect is missing
+  if (!skin.effect && skin.name === "tama") skin.effect = "🌳";
   if (!skin.sound) {
     skin.sound = 'popsound.mp3';
   }
@@ -411,12 +434,11 @@ function checkAchievements() {
           !ownedSkins.find(s => s.name === ach.name)
         ) {
           
-ownedSkins.push({
-  name: ach.name,
-  img: ach.img,
-  sound: ach.sound,
-  effect: ach.effect
-});
+
+
+if (ach.name === "tama" && !ach.effect) ach.effect = "🌳";
+ownedSkins.push({ ...ach });
+
 alert("Kamu mendapatkan skin achievement: " + ach.name);
 currentSkin = ach.name;
 clickImg.src = ach.img;
@@ -424,6 +446,7 @@ scoreWithCurrentSkin = 0;
 updateInventory();
 updateSkinScoreDisplay();
 saveGame();
+
 
         }
       });
