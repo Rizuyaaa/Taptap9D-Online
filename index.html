@@ -287,12 +287,32 @@ scoreWithCurrentSkin = parseInt(localStorage.getItem('scoreWithCurrentSkin')) ||
   }
 
   clickImg.addEventListener('click', () => {
+  let isCritical = Math.random() < 0.1; // 10% chance
+  let criticalText = ""; 
     let scoreToAdd = 1;
+  if (isCritical) {
+    scoreToAdd *= 5;
+    criticalText = "💥 CRITICAL! +" + scoreToAdd;
+  }
 const buffedSkins = ["iyan", "noval", "tama", "atmin"];
 if (buffedSkins.includes(currentSkin)) {
   scoreToAdd = 5;
 }
 score += scoreToAdd;
+  if (isCritical) {
+    const crit = document.createElement('div');
+    crit.textContent = criticalText;
+    crit.style.position = 'absolute';
+    crit.style.left = (clickImg.getBoundingClientRect().left + 50) + 'px';
+    crit.style.top = (clickImg.getBoundingClientRect().top - 20) + 'px';
+    crit.style.fontSize = '24px';
+    crit.style.fontWeight = 'bold';
+    crit.style.color = 'yellow';
+    crit.style.textShadow = '2px 2px red';
+    crit.style.animation = 'fadeOut 1s forwards';
+    document.body.appendChild(crit);
+    setTimeout(() => crit.remove(), 1000);
+  }
 if (currentSkin) scoreWithCurrentSkin += scoreToAdd;
       checkAchievements();
     scoreEl.textContent = 'Score: ' + score;
