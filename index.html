@@ -103,7 +103,67 @@
       background: rgba(255, 255, 255, 0.1);
       border-radius: 10px;
     }
-  </style>
+  
+body {
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  background-attachment: fixed;
+  animation: bgmove 30s linear infinite;
+}
+
+@keyframes bgmove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+h1 {
+  text-shadow: 2px 2px 5px #000;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+#click-img {
+  box-shadow: 0 0 25px rgba(255,255,255,0.5);
+  border: 3px solid #fff;
+  transition: transform 0.15s ease-in-out, box-shadow 0.3s;
+}
+#click-img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 35px rgba(255,255,255,0.7);
+}
+
+button {
+  background: linear-gradient(to right, #00c6ff, #0072ff);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  font-size: 1em;
+  border-radius: 30px;
+  padding: 10px 20px;
+}
+button:hover {
+  transform: scale(1.05);
+  background: linear-gradient(to right, #0072ff, #00c6ff);
+}
+
+.shop, .inventory, .leaderboard, .dev {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  border-radius: 15px;
+}
+
+.skin {
+  background: #3b3f58;
+  transition: transform 0.2s;
+}
+.skin:hover {
+  transform: scale(1.05);
+  background: #4e5370;
+}
+
+.effect {
+  text-shadow: 2px 2px 5px #000;
+  font-size: 40px;
+}
+</style>
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
     import { getFirestore, collection, setDoc, doc, getDoc, query, orderBy, limit, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
