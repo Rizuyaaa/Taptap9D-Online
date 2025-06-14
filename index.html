@@ -354,31 +354,6 @@ body {
 
 
 
-let funnyQuotes = [
-  "UMA MUSIK!🔥",
-  "ALAMAKK🤦‍♂️",
-  "MAHIR BANAR KANAKAN NI!😡",
-  "KIKUKK"
-];
-let quoteCounter = 0;
-
-function showFunnyQuote() {
-  const quote = funnyQuotes[Math.floor(Math.random() * funnyQuotes.length)];
-  const el = document.createElement('div');
-  el.textContent = quote;
-  el.style.position = 'absolute';
-  el.style.left = (clickImg.getBoundingClientRect().left + 30) + 'px';
-  el.style.top = (clickImg.getBoundingClientRect().top - 60) + 'px';
-  el.style.fontSize = '16px';
-  el.style.color = '#ffea00';
-  el.style.textShadow = '0 0 6px #ffea00, 0 0 12px #ffaa00';
-  el.style.fontFamily = '"Press Start 2P", monospace';
-  el.style.animation = 'fadeOut 1.2s forwards';
-  document.body.appendChild(el);
-  setTimeout(() => el.remove(), 1200);
-}
-
-
 function showGifPopup() {
   const gif = document.createElement('img');
   gif.src = "GIFfibri.gif"; // Replace with your own if needed
@@ -742,6 +717,15 @@ function updateStatsUI() {
 }
 
 updateStatsUI();
+
+
+let funnyQuotes = [
+  "UMA MUSIK!🔥",
+  "ALAMAKK🤦‍♂️",
+  "MAHIR BANAR KANAKAN NI!😡",
+  "KIKUKK"
+];
+let quoteCounter = 0;
 
 function showFunnyQuote() {
   const quote = funnyQuotes[Math.floor(Math.random() * funnyQuotes.length)];
