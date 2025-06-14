@@ -13,12 +13,13 @@
       padding: 0;
     }
 
-    body {
-      background: linear-gradient(to right, #2c3e50, #3498db);
-      color: white;
-      text-align: center;
-      padding: 20px;
-    }
+    
+body {
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
 
     h1 {
       font-size: 2.5em;
@@ -104,10 +105,12 @@
       border-radius: 10px;
     }
   
+
 body {
   background: linear-gradient(135deg, #1e3c72, #2a5298);
-  background-attachment: fixed;
-  animation: bgmove 30s linear infinite;
+  color: white;
+  text-align: center;
+  padding: 20px;
 }
 
 @keyframes bgmove {
@@ -162,6 +165,127 @@ button:hover {
 .effect {
   text-shadow: 2px 2px 5px #000;
   font-size: 40px;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+* {
+  font-family: 'Press Start 2P', monospace !important;
+}
+
+h1, h2, h4, button, .skin, .inventory, .shop, .leaderboard {
+  text-shadow: 1px 1px 0 #000;
+  letter-spacing: 1px;
+}
+
+#click-img {
+  image-rendering: pixelated;
+  border: 4px solid #fff;
+  box-shadow: 0 0 10px #00ffe0;
+}
+
+button {
+  border: 2px dashed #fff;
+  box-shadow: 0 0 8px #00c6ff;
+  text-transform: uppercase;
+}
+
+.skin {
+  border: 2px solid #00c6ff;
+  background: #2b3e5a;
+}
+
+.skin:hover {
+  background: #3d537a;
+}
+
+
+body {
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+.leaderboard {
+  border: 3px double #00ffff;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 15px;
+  box-shadow: inset 0 0 10px #00ffff;
+}
+
+.leaderboard h2 {
+  color: #00ffff;
+  margin-bottom: 10px;
+}
+
+#leaderboard-list {
+  text-align: left;
+  font-size: 0.8em;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 10px;
+  border-radius: 10px;
+  list-style: decimal-leading-zero;
+}
+
+.shop, .inventory {
+  margin-top: 30px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+  transition: 0.3s ease;
+}
+.shop:hover, .inventory:hover {
+  background: rgba(255, 255, 255, 0.13);
+  box-shadow: 0 6px 25px rgba(0, 255, 255, 0.2);
+}
+
+.shop h2, .inventory h2 {
+  font-size: 1.4em;
+  color: #ffffff;
+  margin-bottom: 12px;
+  text-shadow: 1px 1px 4px #000;
+}
+
+.shop, .inventory {
+  margin-top: 40px;
+  padding: 25px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.shop::before, .inventory::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #00c6ff, #0072ff);
+  border-radius: 22px;
+  z-index: -1;
+  filter: blur(15px);
+  opacity: 0.3;
+}
+
+.shop:hover, .inventory:hover {
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 255, 255, 0.25);
+}
+
+.shop h2, .inventory h2 {
+  font-size: 1.6em;
+  color: #ffffff;
+  margin-bottom: 18px;
+  text-shadow: 2px 2px 4px #000;
 }
 </style>
 <script type="module">
@@ -226,12 +350,65 @@ button:hover {
 
       localStorage.setItem('lastSubmitDate', today);
     };
-  </script>
+  
+
+
+
+let funnyQuotes = [
+  "UMA MUSIK!🔥",
+  "ALAMAKK🤦‍♂️",
+  "MAHIR BANAR KANAKAN NI!😡",
+  "KIKUKK"
+];
+let quoteCounter = 0;
+
+function showFunnyQuote() {
+  const quote = funnyQuotes[Math.floor(Math.random() * funnyQuotes.length)];
+  const el = document.createElement('div');
+  el.textContent = quote;
+  el.style.position = 'absolute';
+  el.style.left = (clickImg.getBoundingClientRect().left + 30) + 'px';
+  el.style.top = (clickImg.getBoundingClientRect().top - 60) + 'px';
+  el.style.fontSize = '16px';
+  el.style.color = '#ffea00';
+  el.style.textShadow = '0 0 6px #ffea00, 0 0 12px #ffaa00';
+  el.style.fontFamily = '"Press Start 2P", monospace';
+  el.style.animation = 'fadeOut 1.2s forwards';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 1200);
+}
+
+
+function showGifPopup() {
+  const gif = document.createElement('img');
+  gif.src = "GIFfibri.gif"; // Replace with your own if needed
+  gif.style.position = 'fixed';
+  gif.style.bottom = "20px";
+gif.style.right = "20px";
+gif.style.top = "";
+gif.style.left = "";
+gif.style.transform = "";
+  gif.style.width = '200px';
+  gif.style.zIndex = 9999;
+  gif.style.border = '4px solid white';
+  gif.style.borderRadius = '12px';
+  gif.style.boxShadow = '0 0 20px rgba(255,255,255,0.6)';
+  document.body.appendChild(gif);
+  setTimeout(() => gif.remove(), 8000);
+}
+
+</script>
 </head>
 <body>
 <h1>Taptap 9D Online</h1>
 <img alt="click" id="click-img" src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif"/>
 <div id="score">Score: 0</div>
+<div id="stats" style="margin: 10px 0; font-size: 0.9em;">
+  <p>Total Klik: <span id="total-clicks">0</span></p>
+  <p>Total Critical: <span id="total-critical">0</span></p>
+  <p>Skin Favorit: <span id="fav-skin">-</span></p>
+<p>Rata-rata Skor/Klik: <span id="avg-score">0</span></p>
+</div>
 <button onclick="sendScore()">Kirim Skor ke Leaderboard🏆</button>
 <button id="mute-button">Matikan Suara🔊</button>
 <div class="shop" id="shop-skins">
@@ -348,6 +525,13 @@ scoreWithCurrentSkin = parseInt(localStorage.getItem('scoreWithCurrentSkin')) ||
 
   clickImg.addEventListener('click', () => {
   let isCritical = Math.random() < 0.1; // 10% chance
+  totalClicks++;
+  skinUsage[currentSkin] = (skinUsage[currentSkin] || 0) + 1;
+  if (isCritical) totalCritical++;
+  updateStatsUI();
+  localStorage.setItem("totalClicks", totalClicks);
+  localStorage.setItem("totalCritical", totalCritical);
+  localStorage.setItem("skinUsage", JSON.stringify(skinUsage));
   let criticalText = ""; 
     let scoreToAdd = 1;
   if (isCritical) {
@@ -359,20 +543,26 @@ if (buffedSkins.includes(currentSkin)) {
   scoreToAdd = 5;
 }
 score += scoreToAdd;
-  if (isCritical) {
+  quoteCounter++;
+  if (quoteCounter % 20 === 0) showFunnyQuote();
+  if (quoteCounter % 100 === 0) showGifPopup();
+  
+if (isCritical) {
     const crit = document.createElement('div');
     crit.textContent = criticalText;
     crit.style.position = 'absolute';
     crit.style.left = (clickImg.getBoundingClientRect().left + 50) + 'px';
     crit.style.top = (clickImg.getBoundingClientRect().top - 20) + 'px';
-    crit.style.fontSize = '24px';
+    crit.style.fontSize = '20px';
+    crit.style.fontFamily = '"Press Start 2P", monospace';
     crit.style.fontWeight = 'bold';
-    crit.style.color = 'yellow';
-    crit.style.textShadow = '2px 2px red';
+    crit.style.color = '#00ffff';
+    crit.style.textShadow = '0 0 6px #00ffff, 0 0 12px #0088ff';
     crit.style.animation = 'fadeOut 1s forwards';
     document.body.appendChild(crit);
     setTimeout(() => crit.remove(), 1000);
-  }
+}
+
 if (currentSkin) scoreWithCurrentSkin += scoreToAdd;
       checkAchievements();
     scoreEl.textContent = 'Score: ' + score;
@@ -536,6 +726,58 @@ saveGame();
   const selectedSkin = ownedSkins.find(s => s.name === currentSkin) || defaultSkin;
   clickImg.src = selectedSkin.img;
   updateInventory();
+
+// --- Statistik Tracker ---
+let totalClicks = parseInt(localStorage.getItem("totalClicks") || "0");
+let totalCritical = parseInt(localStorage.getItem("totalCritical") || "0");
+let skinUsage = JSON.parse(localStorage.getItem("skinUsage") || "{}");
+
+function updateStatsUI() {
+  document.getElementById("total-clicks").textContent = totalClicks;
+  document.getElementById("total-critical").textContent = totalCritical;
+  let fav = Object.entries(skinUsage).sort((a,b) => b[1]-a[1])[0];
+  document.getElementById("fav-skin").textContent = fav ? fav[0] : "-";
+  let avg = totalClicks > 0 ? (score / totalClicks).toFixed(2) : 0;
+  document.getElementById("avg-score").textContent = avg;
+}
+
+updateStatsUI();
+
+function showFunnyQuote() {
+  const quote = funnyQuotes[Math.floor(Math.random() * funnyQuotes.length)];
+  const el = document.createElement('div');
+  el.textContent = quote;
+  el.style.position = 'absolute';
+  el.style.left = (clickImg.getBoundingClientRect().left + 30) + 'px';
+  el.style.top = (clickImg.getBoundingClientRect().top - 60) + 'px';
+  el.style.fontSize = '16px';
+  el.style.color = '#ffea00';
+  el.style.textShadow = '0 0 6px #ffea00, 0 0 12px #ffaa00';
+  el.style.fontFamily = '"Press Start 2P", monospace';
+  el.style.animation = 'fadeOut 1.2s forwards';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 1200);
+}
+
+
+function showGifPopup() {
+  const gif = document.createElement('img');
+  gif.src = "GIFfibri.gif"; // Replace with your own if needed
+  gif.style.position = 'fixed';
+  gif.style.bottom = "20px";
+gif.style.right = "20px";
+gif.style.top = "";
+gif.style.left = "";
+gif.style.transform = "";
+  gif.style.width = '200px';
+  gif.style.zIndex = 9999;
+  gif.style.border = '4px solid white';
+  gif.style.borderRadius = '12px';
+  gif.style.boxShadow = '0 0 20px rgba(255,255,255,0.6)';
+  document.body.appendChild(gif);
+  setTimeout(() => gif.remove(), 8000);
+}
+
 </script>
 </body>
 </html>
